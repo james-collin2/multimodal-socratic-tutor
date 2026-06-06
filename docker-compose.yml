@@ -1,0 +1,36 @@
+# ─────────────────────────────────────────────────────────────
+#  socratOT — docker-compose.yml
+#  Single service: app (Streamlit). LLM + vision + embeddings
+#  are served by the OpenAI API, so no local model server is needed.
+#  Usage:
+#    docker compose up --build      # build and start
+#    docker compose down            # stop
+# ─────────────────────────────────────────────────────────────
+
+services:
+
+  # ── socratOT Streamlit app ──────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: socratot-app
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./data/socratot.db
+    volumes:
+      # Persist data outside container
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./evaluation:/app/evaluation
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s

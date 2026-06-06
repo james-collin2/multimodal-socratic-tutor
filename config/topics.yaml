@@ -1,0 +1,99 @@
+# ─────────────────────────────────────────────────────────────
+#  socratOT — OT anatomy topic taxonomy
+#  Used by assessment engine and memory tracker
+# ─────────────────────────────────────────────────────────────
+
+neuroscience:
+  - name: cranial_nerves
+    display: "Cranial Nerves"
+    subtopics:
+      - "CN I — Olfactory"
+      - "CN II — Optic"
+      - "CN V — Trigeminal"
+      - "CN VII — Facial"
+      - "CN IX — Glossopharyngeal"
+      - "CN X — Vagus"
+      - "CN XI — Accessory"
+      - "CN XII — Hypoglossal"
+    ot_relevance: "Facial function, swallowing, fine motor"
+
+  - name: cerebellum
+    display: "Cerebellum"
+    subtopics:
+      - "Cerebellar lobes"
+      - "Purkinje cells"
+      - "Coordination pathways"
+    ot_relevance: "Motor coordination and balance in ADLs"
+
+  - name: basal_ganglia
+    display: "Basal Ganglia"
+    subtopics:
+      - "Caudate nucleus"
+      - "Putamen"
+      - "Globus pallidus"
+      - "Dopaminergic pathways"
+    ot_relevance: "Movement disorders, Parkinson's rehabilitation"
+
+  - name: spinal_cord
+    display: "Spinal Cord"
+    subtopics:
+      - "Ascending tracts"
+      - "Descending tracts"
+      - "Dermatomes"
+      - "Myotomes"
+    ot_relevance: "SCI rehabilitation, sensorimotor assessment"
+
+  - name: peripheral_nervous_system
+    display: "Peripheral Nervous System"
+    subtopics:
+      - "Brachial plexus"
+      - "Median nerve"
+      - "Ulnar nerve"
+      - "Radial nerve"
+    ot_relevance: "Upper extremity nerve injuries, splinting"
+
+anatomy:
+  - name: upper_extremity
+    display: "Upper Extremity"
+    subtopics:
+      - "Shoulder girdle"
+      - "Rotator cuff"
+      - "Elbow joint"
+      - "Wrist and hand"
+      - "Carpal bones"
+    ot_relevance: "Core OT domain — ADL performance and hand therapy"
+
+  - name: hand_anatomy
+    display: "Hand Anatomy"
+    subtopics:
+      - "Intrinsic muscles"
+      - "Extrinsic muscles"
+      - "Tendon pulleys"
+      - "Arches of the hand"
+      - "Sensory distribution"
+    ot_relevance: "Fine motor, grip, pinch — central to OT"
+
+  - name: musculoskeletal
+    display: "Musculoskeletal System"
+    subtopics:
+      - "Muscle fiber types"
+      - "Joint types"
+      - "Range of motion"
+      - "Muscle actions"
+    ot_relevance: "Functional movement, splinting, transfers"
+
+  - name: cardiovascular
+    display: "Cardiovascular System"
+    subtopics:
+      - "Cardiac cycle"
+      - "Blood pressure"
+      - "Vascular anatomy"
+    ot_relevance: "Cardiac rehab, activity tolerance"
+
+  - name: respiratory
+    display: "Respiratory System"
+    subtopics:
+      - "Lung anatomy"
+      - "Breathing mechanics"
+      - "Respiratory muscles"
+    ot_relevance: "COPD management, energy conservation"

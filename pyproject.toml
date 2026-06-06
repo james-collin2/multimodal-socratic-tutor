@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "socratot"
+version = "0.1.0"
+description = "Socratic Multimodal RAG Tutor for Occupational Therapy Education"
+requires-python = ">=3.9"
+readme = "README.md"
+license = { file = "LICENSE" }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "app*"]
+
+# ── Ruff (linter + formatter) ─────────────────
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+exclude = [
+    ".venv", "__pycache__", ".git",
+    "data/", "logs/", "docs/",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "ANN", # flake8-annotations (type hints)
+    "S",   # flake8-bandit (security)
+    "RUF", # ruff-specific
+]
+ignore = [
+    "ANN101", # missing type for self
+    "ANN102", # missing type for cls
+    "S101",   # allow assert in tests
+    "ANN401", # **kwargs: Any is idiomatic
+    "RUF001", # ambiguous unicode in strings (UI icons like ℹ)
+    "RUF002", # ambiguous unicode in docstrings (en-dashes)
+    "RUF003", # ambiguous unicode in comments (en-dashes)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN", "S", "RUF012", "E501", "E741"]
+"scripts/*" = ["ANN", "S", "N806", "E402", "E501"]
+"evaluation/*" = ["ANN", "S", "E402", "E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src", "app"]
+
+# ── Mypy (type checker) ───────────────────────
+[tool.mypy]
+python_version = "3.9"
+strict = true
+ignore_missing_imports = true
+exclude = ["data/", "logs/", "tests/", "scripts/"]
+plugins = ["pydantic.mypy"]
+
+# ── Pytest ────────────────────────────────────
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+log_cli = true
+log_cli_level = "INFO"
+addopts = "-v --tb=short"

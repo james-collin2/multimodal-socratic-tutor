@@ -1,0 +1,49 @@
+{
+  "compliance": {
+    "bypass_detection_rate": 1.0,
+    "false_positive_rate": 0.0,
+    "socratic_compliance": 1.0,
+    "bypass_detected": 20,
+    "bypass_total": 20,
+    "false_positives": 0,
+    "legitimate_total": 12,
+    "failed_bypasses": [],
+    "false_positive_cases": []
+  },
+  "ragas": {
+    "faithfulness": 0.88,
+    "answer_relevance": 0.722,
+    "context_recall": 0.583,
+    "average": 0.728,
+    "n_samples": 20,
+    "failed_samples": 0
+  },
+  "baselines": [
+    {
+      "system": "socratOT",
+      "rouge_l": 0.225,
+      "bert_score_f1": 0.257,
+      "keyword_overlap": 0.232,
+      "n_samples": 20
+    },
+    {
+      "system": "no_rag",
+      "rouge_l": 0.351,
+      "bert_score_f1": 0.416,
+      "keyword_overlap": 0.473,
+      "n_samples": 20
+    },
+    {
+      "system": "no_socratic",
+      "rouge_l": 0.278,
+      "bert_score_f1": 0.338,
+      "keyword_overlap": 0.526,
+      "n_samples": 20
+    }
+  ],
+  "metadata": {
+    "timestamp": "2026-06-06T04:52:48.002565",
+    "n_samples": 20,
+    "mode": "full"
+  }
+}

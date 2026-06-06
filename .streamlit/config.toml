@@ -1,0 +1,15 @@
+# socratOT Streamlit theme — Dark Professional
+# Sets the BASE dark theme so built-in widgets (buttons, sliders, focus rings,
+# file uploaders, dataframes) match the custom dark CSS layered on top.
+
+[theme]
+base = "dark"
+primaryColor = "#6366F1"             # indigo — buttons, active states, focus
+backgroundColor = "#0B1120"          # deep slate-navy — main canvas
+secondaryBackgroundColor = "#151D2E" # raised surface — sidebar, cards, inputs
+textColor = "#E2E8F0"                # light slate — body text
+font = "sans serif"
+
+[client]
+toolbarMode = "minimal"
+showErrorDetails = true

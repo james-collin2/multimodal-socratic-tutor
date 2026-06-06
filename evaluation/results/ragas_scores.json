@@ -1,0 +1,8 @@
+{
+  "faithfulness": 0.759,
+  "answer_relevance": 0.542,
+  "context_recall": 0.5,
+  "average": 0.6,
+  "n_samples": 20,
+  "failed_samples": 0
+}
