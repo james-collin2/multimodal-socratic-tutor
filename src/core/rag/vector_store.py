@@ -58,6 +58,28 @@ class VectorStore(ABC):
 # ── ChromaDB implementation ───────────────────────────────────────────────────
 
 
+def _make_noop_embedding_function() -> object:
+    """
+    A no-op Chroma embedding function.
+
+    We compute all embeddings ourselves via the OpenAI ``Embedder`` and always
+    pass ``embeddings`` / ``query_embeddings`` to Chroma explicitly, so Chroma
+    never needs to embed anything. Supplying this avoids Chroma falling back to
+    its built-in ONNX model (``ONNXMiniLM_L6_V2``), which would require the
+    heavy ``onnxruntime`` package to be installed just to open a collection.
+    """
+    from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
+
+    class _NoOpEmbeddingFunction(EmbeddingFunction):
+        def __call__(self, input: Documents) -> Embeddings:  # noqa: A002
+            raise RuntimeError(
+                "Embeddings are computed externally (OpenAI) — pass "
+                "embeddings/query_embeddings to Chroma explicitly."
+            )
+
+    return _NoOpEmbeddingFunction()
+
+
 class ChromaVectorStore(VectorStore):
     """
     ChromaDB-backed vector store with persistent local storage.
@@ -99,6 +121,7 @@ class ChromaVectorStore(VectorStore):
             self._collection = self._client.get_or_create_collection(
                 name=self.COLLECTION_NAME,
                 metadata={"hnsw:space": "cosine"},
+                embedding_function=_make_noop_embedding_function(),
             )
             logger.info(
                 "ChromaDB collection ready: {name} at {path}",

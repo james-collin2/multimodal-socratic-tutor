@@ -23,7 +23,7 @@ st.set_page_config(
     page_title="socratOT — OT Anatomy Tutor",
     page_icon="🧠",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",  # respect the user's collapse choice; don't force-expand on every refresh
     menu_items={
         "Get Help": "https://github.com/bahodir4/multimodal-socratic-tutor",
         "About": "socratOT — Socratic AI Tutor for Occupational Therapy Education",
@@ -147,6 +147,21 @@ hr { margin: 0.9rem 0; border-color: var(--border); }
     border-color: transparent;
     color: #fff;
 }
+/* "🔊 Read aloud" — compact subtle pill, not a full bordered button */
+[class*="st-key-tts_btn_"] button {
+    width: auto;
+    padding: 2px 12px;
+    font-size: 12px;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+}
+[class*="st-key-tts_btn_"] button:hover {
+    color: var(--text);
+    border-color: var(--indigo);
+    background: rgba(99,102,241,.12);
+}
 
 /* ── Inputs ─────────────────────────────────────────────────────────────── */
 .stTextInput input, .stTextArea textarea,
@@ -256,8 +271,55 @@ hr { margin: 0.9rem 0; border-color: var(--border); }
 }
 
 /* ── Hide Streamlit chrome ──────────────────────────────────────────────── */
-#MainMenu, footer, header { visibility: hidden; }
-[data-testid="stToolbar"] { display: none; }
+/* NB: don't hide the whole header — the "reopen sidebar" arrow lives inside
+   it. Make the header transparent and hide only menu/toolbar/decoration. */
+#MainMenu, footer { visibility: hidden; }
+/* Hide ONLY the toolbar's right-side actions (Deploy / menu / status) and the
+   decoration line — NOT the whole stToolbar. In Streamlit 1.52 the collapsed
+   sidebar's re-open button (stExpandSidebarButton) is nested inside stToolbar,
+   so `display:none` on stToolbar removed the re-open button from layout and the
+   sidebar could never be reopened (a display:none ancestor can't be overridden
+   by the child's visibility/opacity rules below). */
+[data-testid="stToolbarActions"], [data-testid="stDecoration"] { display: none; }
+header[data-testid="stHeader"] {
+    background: transparent;
+    visibility: visible;     /* override any inherited hidden state */
+    pointer-events: none;    /* let clicks pass through the empty bar … */
+}
+header[data-testid="stHeader"] * { pointer-events: auto; } /* …except its buttons */
+
+/* Material icons are font ligatures (data-testid="stIconMaterial"). The global
+   Inter font rule above was cascading onto them, so the glyph rendered at 0
+   width — which collapsed the sidebar "re-open" button to 0x0 (invisible &
+   unclickable). Restore the icon font so all Material icons render. */
+[data-testid="stIconMaterial"] { font-family: 'Material Symbols Rounded' !important; }
+
+/* Re-open arrow shown when the sidebar is collapsed (lives in the header).
+   Give it an explicit, high-contrast, clickable size. */
+[data-testid="stExpandSidebarButton"] {
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 1000;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem !important;
+    height: 2.4rem !important;
+    color: var(--text) !important;
+    background: var(--surface-2) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px;
+}
+[data-testid="stExpandSidebarButton"]:hover {
+    color: #fff !important;
+    border-color: var(--indigo) !important;
+    background: rgba(99,102,241,.18) !important;
+}
+[data-testid="stExpandSidebarButton"] [data-testid="stIconMaterial"] {
+    font-size: 1.4rem !important;
+    color: var(--text) !important;
+    width: auto !important;
+}
 
 /* ── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 9px; height: 9px; }

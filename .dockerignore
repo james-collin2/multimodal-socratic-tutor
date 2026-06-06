@@ -1,0 +1,51 @@
+# ─────────────────────────────────────────────────────────────
+#  socratOT — .dockerignore
+#  Keeps the build context tiny: only app code + config + deps.
+#  Anything mounted as a volume at runtime is excluded here.
+# ─────────────────────────────────────────────────────────────
+
+# Local virtualenv (~1.9 GB — never ship this)
+.venv/
+venv/
+env/
+
+# Git & VCS
+.git/
+.gitignore
+.pre-commit-config.yaml
+
+# Secrets (provided at runtime via env_file / mounts)
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Bind-mounted at runtime by docker-compose
+data/
+logs/
+evaluation/
+
+# Python caches & build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Tests (not needed in the runtime image)
+tests/
+
+# OS / editor cruft
+.DS_Store
+*.swp
+
+# Docs & misc (not needed to run the app)
+*.pdf
+README.md
+LICENSE

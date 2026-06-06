@@ -6,9 +6,19 @@
 base = "dark"
 primaryColor = "#6366F1"             # indigo — buttons, active states, focus
 backgroundColor = "#0B1120"          # deep slate-navy — main canvas
-secondaryBackgroundColor = "#151D2E" # raised surface — sidebar, cards, inputs
+secondaryBackgroundColor = "#151D2E" # raised surface — cards, inputs
 textColor = "#E2E8F0"                # light slate — body text
+borderColor = "#243049"              # subtle borders
 font = "sans serif"
+
+# Sidebar sub-theme — give the sidebar valid surface/border colors to derive
+# its widget colors from (silences the empty "theme.sidebar" color warnings).
+[theme.sidebar]
+backgroundColor = "#0E1626"
+secondaryBackgroundColor = "#1B2536"
+textColor = "#E2E8F0"
+borderColor = "#243049"
+primaryColor = "#6366F1"
 
 [client]
 toolbarMode = "minimal"
