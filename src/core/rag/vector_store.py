@@ -71,7 +71,7 @@ def _make_noop_embedding_function() -> object:
     from chromadb.api.types import Documents, EmbeddingFunction, Embeddings
 
     class _NoOpEmbeddingFunction(EmbeddingFunction):
-        def __call__(self, input: Documents) -> Embeddings:  # noqa: A002
+        def __call__(self, input: Documents) -> Embeddings:
             raise RuntimeError(
                 "Embeddings are computed externally (OpenAI) — pass "
                 "embeddings/query_embeddings to Chroma explicitly."
