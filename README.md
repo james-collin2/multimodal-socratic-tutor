@@ -16,7 +16,7 @@ pip install -r requirements.txt
 cp .env.example .env          # add OPENAI_API_KEY
 python scripts/ingest_corpus.py --sample
 pytest tests/ -v
-streamlit run app/main.py
+python -m streamlit run app/main.py
 ```
 
 ---

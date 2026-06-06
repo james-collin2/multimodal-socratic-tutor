@@ -10,12 +10,12 @@ packaging>=24.0
 
 # ── OpenAI (primary LLM + embeddings) ─────────
 openai>=1.35.0
-langchain-openai>=0.1.20
+langchain-openai
 
 # ── LangChain framework ────────────────────────
-langchain==0.3.7
-langchain-community==0.3.7
-langchain-core==0.3.21
+langchain
+langchain-community
+langchain-core
 
 # ── Vector stores ─────────────────────────────
 chromadb==0.5.15
