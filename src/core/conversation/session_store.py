@@ -10,10 +10,10 @@ All DB operations are async — never block the event loop.
 from __future__ import annotations
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import uuid4
 
-from config.settings import get_settings
+from src.config.settings import get_settings
 from src.core.conversation.state import ConversationPhase, HintLevel
 from src.utils.exceptions import DatabaseError, SessionNotFoundError
 from src.utils.logger import logger
@@ -96,7 +96,7 @@ class SessionStore:
         """Create a new session and return session_id."""
         await self.init()
         session_id = str(uuid4())
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(tz=timezone.utc).isoformat()
         async with await self._get_conn() as conn:
             await conn.execute(
                 """INSERT INTO sessions
@@ -169,7 +169,7 @@ class SessionStore:
             return
 
         updates.append("updated_at = ?")
-        values.append(datetime.utcnow().isoformat())
+        values.append(datetime.now(tz=timezone.utc).isoformat())
         values.append(session_id)
 
         # column names in `updates` are code-controlled; all values are parameterized
@@ -187,7 +187,7 @@ class SessionStore:
     ) -> None:
         """Upsert student profile."""
         await self.init()
-        now = datetime.utcnow().isoformat()
+        now = datetime.now(tz=timezone.utc).isoformat()
         async with await self._get_conn() as conn:
             await conn.execute(
                 """INSERT INTO student_profiles

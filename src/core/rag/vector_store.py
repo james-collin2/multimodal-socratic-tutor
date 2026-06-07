@@ -17,7 +17,7 @@ from abc import ABC, abstractmethod
 from functools import lru_cache
 from pathlib import Path
 
-from config.settings import VectorStoreType, get_settings
+from src.config.settings import VectorStoreType, get_settings
 from src.core.rag.embedder import Embedder
 from src.schemas.rag import DocumentChunk, RetrievedChunk
 from src.utils.exceptions import CorpusEmptyError, VectorStoreError
@@ -164,7 +164,7 @@ class ChromaVectorStore(VectorStore):
             for chunk in chunks
         ]
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         await loop.run_in_executor(
             None,
             lambda: collection.add(
@@ -194,7 +194,7 @@ class ChromaVectorStore(VectorStore):
 
         query_embedding = await self._embedder.embed_query(query)
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         results = await loop.run_in_executor(
             None,
             lambda: collection.query(
@@ -239,7 +239,7 @@ class ChromaVectorStore(VectorStore):
         """Return number of stored chunks."""
         try:
             collection = self._get_collection()
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
             return await loop.run_in_executor(None, collection.count)
         except Exception:
             return 0
@@ -314,7 +314,7 @@ class FAISSVectorStore(VectorStore):
         dim = vectors.shape[1]
         index = self._get_index(dim)
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         await loop.run_in_executor(None, lambda: index.add(vectors))
         self._chunks.extend(chunks)
 
@@ -346,7 +346,7 @@ class FAISSVectorStore(VectorStore):
         index = self._get_index()
         k = min(top_k, len(self._chunks))
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         scores, indices = await loop.run_in_executor(None, lambda: index.search(q, k))
 
         retrieved: list[RetrievedChunk] = []

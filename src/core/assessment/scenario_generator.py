@@ -124,7 +124,7 @@ Generate a clinical scenario and respond ONLY with valid JSON:
 
         try:
             llm = self._get_llm()
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
             resp = await loop.run_in_executor(None, lambda: llm.invoke(prompt))
             raw = resp.content if hasattr(resp, "content") else str(resp)
             data = safe_parse_json(raw)

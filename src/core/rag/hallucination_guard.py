@@ -228,7 +228,7 @@ Respond ONLY with valid JSON:
         try:
             import asyncio
 
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
             response = await loop.run_in_executor(None, lambda: self._llm.invoke(prompt))
             text = response.content if hasattr(response, "content") else str(response)
             parsed = safe_parse_json(text)

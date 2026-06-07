@@ -1,5 +1,5 @@
 """
-app/views/settings_page.py
+src/app/views/settings_page.py
 
 Settings page — student profile, tutoring preferences, session management,
 and a compact read-only system status. Preferences persist in session state
@@ -12,11 +12,11 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))
 
 import streamlit as st
 
-from config.settings import get_settings
+from src.config.settings import get_settings
 
 NAVY = "#E2E8F0"
 MUTED = "#94A3B8"
@@ -162,9 +162,7 @@ def render() -> None:
 
                 sid = st.session_state.get("student_id", "student_demo")
                 try:
-                    loop = asyncio.new_event_loop()
-                    loop.run_until_complete(StudentMemory().delete(sid))
-                    loop.close()
+                    asyncio.run(StudentMemory().delete(sid))
                     st.session_state.pop("mastery_scores", None)
                     st.session_state.pop("topics_covered", None)
                     st.toast("Learning history cleared", icon="🗑")

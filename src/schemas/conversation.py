@@ -102,7 +102,7 @@ class SessionState(IdentifiedSchema):
     @property
     def answer_reveal_eligible(self) -> bool:
         """True when the student has received enough hints."""
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         settings = get_settings()
         return self.hint_turns_used >= settings.max_hint_turns

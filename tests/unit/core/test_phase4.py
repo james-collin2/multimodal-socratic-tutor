@@ -150,7 +150,7 @@ class TestStudentMemory:
         import os
 
         os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{tmp_path}/m1.db"
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         get_settings.cache_clear()
         from src.core.memory.student_memory import StudentMemory
@@ -166,7 +166,7 @@ class TestStudentMemory:
         import os
 
         os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{tmp_path}/m2.db"
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         get_settings.cache_clear()
         from src.core.memory.student_memory import MemoryRecord, StudentMemory
@@ -187,7 +187,7 @@ class TestStudentMemory:
         import os
 
         os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{tmp_path}/m3.db"
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         get_settings.cache_clear()
         from src.core.memory.student_memory import StudentMemory
@@ -202,7 +202,7 @@ class TestStudentMemory:
         import os
 
         os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{tmp_path}/m4.db"
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         get_settings.cache_clear()
         from src.core.memory.student_memory import StudentMemory
@@ -236,7 +236,7 @@ class TestMemoryManager:
         import os
 
         os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{tmp_path}/mgr1.db"
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         get_settings.cache_clear()
         from src.core.memory.memory_manager import MemoryManager
@@ -252,7 +252,7 @@ class TestMemoryManager:
         import os
 
         os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{tmp_path}/mgr2.db"
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         get_settings.cache_clear()
         from src.core.memory.memory_manager import MemoryManager
@@ -279,7 +279,7 @@ class TestMemoryManager:
         import os
 
         os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{tmp_path}/mgr3.db"
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         get_settings.cache_clear()
         from src.core.memory.memory_manager import MemoryManager

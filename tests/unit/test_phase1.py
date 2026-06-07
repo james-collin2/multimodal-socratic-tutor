@@ -19,7 +19,7 @@ import pytest
 class TestSettings:
     def test_settings_load_with_defaults(self) -> None:
         """Settings resolves built-in defaults when no .env is loaded."""
-        from config.settings import Settings
+        from src.config.settings import Settings
 
         # _env_file=None ignores any local .env so we test the real defaults
         # (otherwise a developer's .env override would make this flaky).
@@ -31,7 +31,7 @@ class TestSettings:
 
     def test_settings_singleton(self) -> None:
         """get_settings() returns the same instance each call."""
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         s1 = get_settings()
         s2 = get_settings()
@@ -39,7 +39,7 @@ class TestSettings:
 
     def test_settings_computed_properties(self) -> None:
         """Computed properties resolve correctly."""
-        from config.settings import AppEnv, Settings
+        from src.config.settings import AppEnv, Settings
 
         s = Settings(app_env=AppEnv.DEVELOPMENT)
         assert s.is_development is True
@@ -47,14 +47,14 @@ class TestSettings:
 
     def test_chunk_overlap_validation(self) -> None:
         """Bad config is clamped (not crashed): overlap is forced below chunk_size."""
-        from config.settings import Settings
+        from src.config.settings import Settings
 
         s = Settings(chunk_size=512, chunk_overlap=9999)
         assert s.chunk_overlap < s.chunk_size
 
     def test_out_of_range_settings_clamped(self) -> None:
         """Out-of-range numeric settings clamp into range instead of raising."""
-        from config.settings import Settings
+        from src.config.settings import Settings
 
         s = Settings(max_hint_turns=0, top_k_retrieval=999)
         assert s.max_hint_turns == 1  # clamped up to minimum
@@ -268,9 +268,9 @@ class TestProjectStructure:
             "pyproject.toml",
             "Dockerfile",
             "docker-compose.yml",
-            "config/settings.py",
-            "config/prompts.yaml",
-            "config/topics.yaml",
+            "src/config/settings.py",
+            "src/config/prompts.yaml",
+            "src/config/topics.yaml",
             "src/schemas/base.py",
             "src/schemas/conversation.py",
             "src/schemas/rag.py",
@@ -296,12 +296,11 @@ class TestProjectStructure:
             "src/core/assessment",
             "src/models",
             "src/schemas",
-            "src/services",
             "src/utils",
             "src/prompts",
             "data/raw",
             "data/processed",
-            "config",
+            "src/config",
             "tests/unit",
             "tests/integration",
         ]

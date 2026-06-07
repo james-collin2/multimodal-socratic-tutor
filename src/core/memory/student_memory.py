@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 
 from src.utils.logger import logger
 
@@ -75,7 +75,7 @@ class StudentMemory:
     """
 
     def __init__(self) -> None:
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         settings = get_settings()
         db_path = settings.database_path
@@ -125,7 +125,7 @@ class StudentMemory:
     async def save(self, record: MemoryRecord) -> None:
         """Upsert memory record."""
         await self.init()
-        record.last_seen = datetime.utcnow().isoformat()
+        record.last_seen = datetime.now(tz=timezone.utc).isoformat()
         d = record.to_dict()
         async with self._conn() as conn:
             await conn.execute(

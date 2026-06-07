@@ -158,7 +158,7 @@ Answer:"""
             import asyncio
 
             llm = self._get_llm()
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
             response = await loop.run_in_executor(None, lambda: llm.invoke(prompt))
             answer = (response.content if hasattr(response, "content") else str(response)).strip()
 

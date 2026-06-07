@@ -88,7 +88,7 @@ Respond ONLY with valid JSON array:
 
         try:
             llm = self._get_llm()
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
             resp = await loop.run_in_executor(
                 None,
                 lambda: llm.invoke(prompt),

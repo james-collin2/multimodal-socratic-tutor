@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import io
 
-from config.settings import get_settings
+from src.config.settings import get_settings
 from src.utils.logger import logger
 
 

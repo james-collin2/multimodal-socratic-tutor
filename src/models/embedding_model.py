@@ -14,7 +14,7 @@ from __future__ import annotations
 import asyncio
 from functools import lru_cache
 
-from config.settings import EmbeddingProvider, get_settings
+from src.config.settings import EmbeddingProvider, get_settings
 from src.utils.exceptions import EmbeddingError
 from src.utils.logger import logger
 
@@ -114,7 +114,7 @@ class EmbeddingModel:
         Offloads CPU-bound work to thread pool.
         """
         self._load()
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
 
         try:
             if self._provider == EmbeddingProvider.OPENAI.value:

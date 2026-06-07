@@ -16,7 +16,7 @@ from typing import Any
 
 from langchain_core.language_models import BaseLLM
 
-from config.settings import get_settings
+from src.config.settings import get_settings
 from src.utils.exceptions import LLMUnavailableError
 from src.utils.logger import logger
 

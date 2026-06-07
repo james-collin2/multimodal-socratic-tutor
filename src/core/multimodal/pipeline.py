@@ -182,7 +182,7 @@ class MultimodalPipeline:
             from src.models.llm_factory import get_llm
 
             llm = get_llm()
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
             resp = await loop.run_in_executor(None, lambda: llm.invoke(prompt))
             text = (resp.content if hasattr(resp, "content") else str(resp)).strip()
             if text:

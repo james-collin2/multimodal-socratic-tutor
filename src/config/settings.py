@@ -191,7 +191,7 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """
     Cached Settings singleton.
-    Usage: from config.settings import get_settings; s = get_settings()
+    Usage: from src.config.settings import get_settings; s = get_settings()
     """
     return Settings()
 

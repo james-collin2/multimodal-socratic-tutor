@@ -82,7 +82,7 @@ class StudentResponseEvaluator:
             )
 
         # Stage 1: fast keyword check
-        overlap = self._keyword_overlap(student_response, reference_answer)
+        overlap = self.keyword_overlap(student_response, reference_answer)
 
         # Stage 2: LLM semantic evaluation
         try:
@@ -126,7 +126,7 @@ Evaluate the student response and return ONLY valid JSON:
 }}"""
 
         llm = self._get_llm()
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         raw = await loop.run_in_executor(
             None,
             lambda: llm.invoke(prompt),
@@ -188,7 +188,7 @@ Evaluate the student response and return ONLY valid JSON:
                 encouragement="That is a common misconception — let me guide you.",
             )
 
-    def _keyword_overlap(self, response: str, reference: str) -> float:
+    def keyword_overlap(self, response: str, reference: str) -> float:
         """Calculate keyword overlap ratio between response and reference."""
         import re
 

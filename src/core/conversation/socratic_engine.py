@@ -16,7 +16,7 @@ from __future__ import annotations
 import asyncio
 from dataclasses import dataclass, field
 
-from config.settings import get_settings
+from src.config.settings import get_settings
 from src.core.conversation.state import ConversationPhase, HintLevel
 from src.core.rag.pipeline import RAGPipeline
 from src.prompts.loader import get_prompt
@@ -138,7 +138,7 @@ class SocraticEngine:
         rag_result = await self._rag.query(retrieval_query)
         context = rag_result.retrieval.assembled_context
         citations = rag_result.retrieval.citations
-        topic = self._detect_topic(student_input)
+        topic = self.detect_topic(student_input)
 
         if is_bypass and not self._answer_reveal_eligible(current_hint):
             content = await self._redirect_bypass(student_input, context, current_hint)
@@ -206,12 +206,12 @@ Ask at most ONE question. Do NOT lecture or give facts yet."""
             is_reveal=False,
             retrieved_context="",
             citations=[],
-            topic_detected=self._detect_topic(student_input),
+            topic_detected=self.detect_topic(student_input),
         )
 
     async def _handle_mastery(self, session_state: dict) -> SocraticResponse:
         history = session_state.get("history", [])
-        topics = list({t["topic"] for t in history if t.get("topic")})
+        topics = list({t["content"] for t in history if t.get("role") == "user" and self.detect_topic(t.get("content", ""))})
         content = get_prompt(
             "socratic.mastery_summary",
             mastered_topics=", ".join(topics) if topics else "anatomy topics",
@@ -299,7 +299,7 @@ Ask at most ONE question. Do NOT lecture or give facts yet."""
         substantive user question. Self-contained questions (those with a clear
         topic) are used as-is.
         """
-        if self._detect_topic(student_input):
+        if self.detect_topic(student_input):
             return student_input
         t = student_input.lower().strip()
         cues = ("how about", "what about", "and ", "what else", "what of", "and the")
@@ -309,7 +309,7 @@ Ask at most ONE question. Do NOT lecture or give facts yet."""
                     return f"{h['content']} {student_input}".strip()
         return student_input
 
-    def _detect_topic(self, student_input: str) -> str | None:
+    def detect_topic(self, student_input: str) -> str | None:
         keywords = {
             "cerebellum": "cerebellum",
             "cranial": "cranial_nerves",
@@ -333,7 +333,7 @@ Ask at most ONE question. Do NOT lecture or give facts yet."""
     async def _llm_call(self, prompt: str) -> str:
         try:
             llm = self._get_llm()
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
             resp = await loop.run_in_executor(None, lambda: llm.invoke(prompt))
             return (resp.content if hasattr(resp, "content") else str(resp)).strip()
         except Exception as e:

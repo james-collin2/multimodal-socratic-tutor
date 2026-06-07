@@ -540,7 +540,7 @@ def ingest_pdf_directly(pdf_path: Path) -> list:
         logger.error("pypdf not installed — run: pip install pypdf")
         return []
 
-    from config.settings import get_settings
+    from src.config.settings import get_settings
     from src.core.rag.chunker import Chunker
 
     settings = get_settings()
@@ -678,7 +678,7 @@ def create_sample_corpus(out_dir: Path) -> list[Path]:
 
 def create_sample_chunks() -> list:
     """Create chunks directly from built-in sample text (no files needed)."""
-    from config.settings import get_settings
+    from src.config.settings import get_settings
     from src.core.rag.chunker import Chunker
 
     settings = get_settings()

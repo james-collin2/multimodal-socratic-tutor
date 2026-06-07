@@ -1,8 +1,8 @@
 """
-app/pages/dashboard.py
+src/app/views/dashboard.py
 
-Student performance dashboard — updated Phase 4.
-Added: cross-session memory panel, assessment scores, mastery trends.
+Student performance dashboard.
+Cross-session memory panel, assessment scores, mastery trends.
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))
 
 import plotly.graph_objects as go
 import streamlit as st
@@ -103,11 +103,7 @@ def _load_memory_scores(student_id: str) -> dict[str, float]:
 
         from src.core.memory.student_memory import StudentMemory
 
-        mem = StudentMemory()
-        loop = asyncio.new_event_loop()
-        record = loop.run_until_complete(mem.load(student_id))
-        loop.close()
-        return record.mastery_scores
+        return asyncio.run(StudentMemory().load(student_id)).mastery_scores
     except Exception:
         return {}
 

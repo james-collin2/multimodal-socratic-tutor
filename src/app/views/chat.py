@@ -1,5 +1,5 @@
 """
-app/pages/chat.py
+src/app/views/chat.py
 
 Production chat interface for socratOT.
 Shows the Socratic tutoring conversation with:
@@ -18,11 +18,12 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))
 
 import streamlit as st
 
-from config.settings import get_settings
+from src.config.settings import get_settings
+from src.core.conversation.state import PHASE_CONFIG
 from src.utils.logger import logger
 
 if TYPE_CHECKING:
@@ -39,13 +40,7 @@ def _phase_topbar() -> None:
     hint = st.session_state.get("hint_level", 0)
     max_h = settings.max_hint_turns
 
-    phase_labels = {
-        "rapport": ("Building rapport", "rgba(56,135,230,.16)", "#7DB4F5"),
-        "tutoring": ("Socratic tutoring", "rgba(99,102,241,.18)", "#A5B4FC"),
-        "assessment": ("Clinical assessment", "rgba(244,150,90,.16)", "#F6B07D"),
-        "mastery": ("Mastery summary", "rgba(52,211,153,.16)", "#6EE7B7"),
-    }
-    label, bg, fg = phase_labels.get(phase, ("Active", "rgba(148,163,184,.16)", "#CBD5E1"))
+    label, bg, fg = PHASE_CONFIG.get(phase, ("Active", "rgba(148,163,184,.16)", "#CBD5E1"))
 
     col1, col2, col3, col4 = st.columns([3, 2, 2, 2])
     with col1:
@@ -245,7 +240,7 @@ def _hint_indicator() -> None:
 def _is_substantive(text: str, engine: object) -> bool:
     """True if the message already names a topic or asks something teachable."""
     t = text.lower().strip()
-    if engine._detect_topic(text):
+    if engine.detect_topic(text):
         return True
     # Avoid bare "name"/"list" (they false-trigger on "my name is …").
     triggers = (
@@ -278,7 +273,9 @@ async def _get_tutor_response(user_input: str, uploaded_image: UploadedFile | No
         from src.core.conversation.socratic_engine import SocraticEngine
         from src.core.conversation.state import ConversationPhase
 
-        engine = SocraticEngine()
+        if "_engine" not in st.session_state:
+            st.session_state["_engine"] = SocraticEngine()
+        engine = st.session_state["_engine"]
 
         # ── Image path: if an image is attached, analyse it (vision pipeline) ──────
         # The student's typed text (if any) is treated as a question about the image.
@@ -369,7 +366,7 @@ async def _get_tutor_response(user_input: str, uploaded_image: UploadedFile | No
                 from src.core.conversation.evaluator import StudentResponseEvaluator
                 from src.core.memory.student_memory import StudentMemory
 
-                overlap = StudentResponseEvaluator()._keyword_overlap(
+                overlap = StudentResponseEvaluator().keyword_overlap(
                     user_input, response.retrieved_context
                 )
                 new_score = round(overlap * 100, 1)
@@ -592,14 +589,12 @@ def render() -> None:
     ):
         last_input = st.session_state.messages[-1]["content"]
         with st.spinner("socratOT is thinking..."):
-            loop = asyncio.new_event_loop()
-            response = loop.run_until_complete(
+            response = asyncio.run(
                 _get_tutor_response(
                     last_input,
                     st.session_state.uploaded_image,
                 )
             )
-            loop.close()
 
         st.session_state.messages.append(response)
         st.session_state.is_loading = False

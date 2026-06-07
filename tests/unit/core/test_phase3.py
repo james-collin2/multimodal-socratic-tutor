@@ -89,7 +89,7 @@ class TestSessionStore:
 
         os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{tmp_path}/test.db"
         # Reset lru_cache so settings picks up new env var
-        from config.settings import get_settings
+        from src.config.settings import get_settings
         from src.core.conversation.session_store import SessionStore
 
         get_settings.cache_clear()
@@ -180,7 +180,7 @@ class TestConversationManager:
         import os
 
         os.environ["DATABASE_URL"] = f"sqlite+aiosqlite:///{tmp_path}/mgr.db"
-        from config.settings import get_settings
+        from src.config.settings import get_settings
 
         get_settings.cache_clear()
         from src.core.conversation.manager import ConversationManager

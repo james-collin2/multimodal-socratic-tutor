@@ -7,7 +7,7 @@ Single responsibility: query string in → RetrievalResult out.
 
 from __future__ import annotations
 
-from config.settings import get_settings
+from src.config.settings import get_settings
 from src.core.rag.vector_store import VectorStore, get_vector_store
 from src.schemas.rag import RetrievalResult, RetrievedChunk
 from src.utils.exceptions import RetrievalError

@@ -21,7 +21,7 @@ import yaml
 from src.utils.exceptions import ConfigurationError
 from src.utils.logger import logger
 
-_PROMPTS_PATH = Path(__file__).parent.parent.parent / "config" / "prompts.yaml"
+_PROMPTS_PATH = Path(__file__).parent.parent / "config" / "prompts.yaml"
 
 
 @lru_cache(maxsize=1)

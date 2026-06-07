@@ -12,7 +12,7 @@ import base64
 from dataclasses import dataclass
 from pathlib import Path
 
-from config.settings import get_settings
+from src.config.settings import get_settings
 from src.utils.helpers import safe_parse_json
 from src.utils.logger import logger
 
@@ -111,7 +111,7 @@ class VisionAnalyzer:
             settings = get_settings()
             client = OpenAI(api_key=settings.openai_api_key)
 
-            loop = asyncio.get_event_loop()
+            loop = asyncio.get_running_loop()
             response = await loop.run_in_executor(
                 None,
                 lambda: client.chat.completions.create(

@@ -1,7 +1,7 @@
 """
-app/pages/image_analysis.py
+src/app/views/image_analysis.py
 
-Image analysis page — fully functional in Phase 4.
+Image analysis page.
 Accepts anatomy image uploads, runs GPT-4o vision, and generates
 Socratic questions. Displays identified structures and local corpus.
 """
@@ -13,7 +13,7 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))
 
 import streamlit as st
 
@@ -103,13 +103,11 @@ def render() -> None:
                         if media_type == "jpg":
                             media_type = "jpeg"
 
-                        loop = asyncio.new_event_loop()
-                        result = loop.run_until_complete(
+                        result = asyncio.run(
                             _run_vision_pipeline(
                                 image_bytes, media_type, (question or "").strip() or None
                             )
                         )
-                        loop.close()
 
                     st.session_state["vision_result"] = result
                     st.session_state["vision_image_name"] = uploaded.name

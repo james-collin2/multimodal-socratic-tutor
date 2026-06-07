@@ -16,7 +16,7 @@ pip install -r requirements.txt
 cp .env.example .env          # add OPENAI_API_KEY
 python scripts/ingest_corpus.py --sample
 pytest tests/ -v
-python -m streamlit run app/main.py
+python -m streamlit run src/app/main.py
 ```
 
 ---
@@ -39,7 +39,6 @@ OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 ```bash
 python scripts/ingest_corpus.py --sample          # built-in corpus
 python scripts/ingest_corpus.py --pdf FILE.pdf    # full OpenStax PDF
-python scripts/download_images.py                 # extract from PDF
 ```
 
 ---
@@ -47,14 +46,14 @@ python scripts/download_images.py                 # extract from PDF
 ## Evaluation
 
 ```bash
-python evaluation/run_evaluation.py --quick       # fast (5 samples)
-python evaluation/run_evaluation.py               # full (20 samples)
-python evaluation/run_evaluation.py --compliance  # bypass detection only
-python evaluation/run_evaluation.py --ragas       # RAGAS metrics only
-python evaluation/run_evaluation.py --baseline    # benchmark comparison
+python src/evaluation/run_evaluation.py --quick       # fast (5 samples)
+python src/evaluation/run_evaluation.py               # full (20 samples)
+python src/evaluation/run_evaluation.py --compliance  # bypass detection only
+python src/evaluation/run_evaluation.py --ragas       # RAGAS metrics only
+python src/evaluation/run_evaluation.py --baseline    # benchmark comparison
 ```
 
-Results saved to `evaluation/results/` and `docs/phase5_results.md`.
+Results saved to `src/evaluation/results/`.
 
 ---
 
@@ -62,13 +61,13 @@ Results saved to `evaluation/results/` and `docs/phase5_results.md`.
 
 **Streamlit Community Cloud:**
 1. Go to `share.streamlit.io` → New app
-2. Select repo `your_username/multimodal-socratic-tutor`, branch `main`, file `app/main.py`
+2. Select repo, branch `main`, file `src/app/main.py`
 3. Add secrets: `OPENAI_API_KEY = "sk-..."`
 4. Deploy → get public URL
 
 **Docker:**
 ```bash
-docker compose up --build -d   # single Streamlit service; uses OpenAI API
+docker compose up --build -d
 docker compose logs -f app
 ```
 
@@ -77,19 +76,21 @@ docker compose logs -f app
 ## Structure
 
 ```
-app/                    Streamlit UI (chat, dashboard, image analysis)
-config/                 Settings, prompts, topics
-evaluation/             RAGAS, compliance, baseline evaluators
 src/
-  core/conversation/   Socratic engine + state machine
-  core/rag/            RAG pipeline
-  core/multimodal/     GPT-4o vision pipeline
-  core/memory/         Cross-session student memory
-  core/assessment/     Clinical scenario + scoring
-  models/              LLM + embedding providers
-  schemas/             Pydantic models
-scripts/               Ingestion + setup utilities
-tests/                 142 passing unit + integration tests
+  app/                   Streamlit UI (chat, dashboard, image analysis)
+  config/                Settings, prompts, topics
+  evaluation/            RAGAS, compliance, baseline evaluators
+  core/conversation/     Socratic engine + state machine
+  core/rag/              RAG pipeline
+  core/multimodal/       GPT-4o vision pipeline
+  core/memory/           Cross-session student memory
+  core/assessment/       Clinical scenario + scoring
+  models/                LLM + embedding providers
+  schemas/               Pydantic models
+  prompts/               Prompt loader
+  utils/                 Helpers, logging, exceptions
+scripts/                 Ingestion + setup utilities
+tests/                   Unit + integration tests
 ```
 
 ---
@@ -99,41 +100,26 @@ tests/                 142 passing unit + integration tests
 Linting and formatting are enforced by [ruff](https://docs.astral.sh/ruff/)
 via a pre-commit hook (`.pre-commit-config.yaml`).
 
-**Why a commit can "Fail" on `ruff`:** the hook runs `ruff --fix` and
-`ruff-format`, which *auto-fix and reformat* your files. When pre-commit
-modifies a file, it intentionally fails the commit so you can review the
-changes — it is **not** a code error. Just re-stage and commit again:
+When pre-commit runs `ruff --fix` and `ruff-format`, it intentionally fails
+the commit if it modifies files so you can review the changes — it is **not**
+a code error. Just re-stage and commit again:
 
 ```bash
-git add -A && git commit   # the fixes are already applied; this time it passes
+git add -A && git commit
 ```
 
-To format everything yourself *before* committing (so the hook never has to):
+To format before committing:
 
 ```bash
-ruff check --fix .   # auto-fix lint issues
-ruff format .        # apply formatting
-pytest -q            # confirm still green
+ruff check --fix . && ruff format .
+pytest -q
 git add -A && git commit -m "..."
 ```
 
-One-time install of the hook in a fresh clone:
+One-time hook install:
 
 ```bash
 pre-commit install
-```
-
----
-
-## Known fixes
-
-```bash
-# watchdog conflict on Linux
-sed -i 's/watchdog==5.0.3/watchdog==4.0.2/' requirements.txt
-
-# ChromaDB telemetry — add to .env
-ANONYMIZED_TELEMETRY=False
-CHROMA_TELEMETRY=false
 ```
 
 ---

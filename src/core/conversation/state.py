@@ -10,6 +10,15 @@ from __future__ import annotations
 from enum import Enum
 from typing import NamedTuple
 
+# Single source of truth for phase display used in both sidebar and chat topbar.
+# Format: phase_value → (label, badge_bg, badge_fg)
+PHASE_CONFIG: dict[str, tuple[str, str, str]] = {
+    "rapport":    ("Building rapport",     "rgba(56,135,230,.16)",  "#7DB4F5"),
+    "tutoring":   ("Socratic tutoring",    "rgba(99,102,241,.18)",  "#A5B4FC"),
+    "assessment": ("Clinical assessment",  "rgba(244,150,90,.16)",  "#F6B07D"),
+    "mastery":    ("Mastery summary",      "rgba(52,211,153,.16)",  "#6EE7B7"),
+}
+
 
 class ConversationPhase(str, Enum):
     """

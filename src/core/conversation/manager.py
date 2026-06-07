@@ -7,7 +7,7 @@ Updated in Phase 4 to wire in MemoryManager and MasteryTracker.
 
 from __future__ import annotations
 
-from config.settings import get_settings
+from src.config.settings import get_settings
 from src.core.conversation.session_store import SessionStore
 from src.core.conversation.state import (
     ConversationPhase,

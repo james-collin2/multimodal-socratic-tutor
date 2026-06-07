@@ -18,7 +18,7 @@ from pathlib import Path
 
 from loguru import logger as _logger
 
-from config.settings import get_settings
+from src.config.settings import get_settings
 
 
 def _setup_logger() -> None:

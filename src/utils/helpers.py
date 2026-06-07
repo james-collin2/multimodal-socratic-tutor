@@ -28,8 +28,8 @@ def clean_text(text: str) -> str:
     """
     # Collapse multiple whitespace (including newlines) to single space
     text = re.sub(r"\s+", " ", text)
-    # Remove non-printable characters
-    text = re.sub(r"[^\x20-\x7E\n]", "", text)
+    # Strip only C0/C1 control characters; keep non-ASCII (Greek letters, accented chars, etc.)
+    text = re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", "", text)
     return text.strip()
 
 

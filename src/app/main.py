@@ -1,10 +1,10 @@
 """
-app/main.py
+src/app/main.py
 
 socratOT — production Streamlit entry point.
 Handles session init, sidebar, navigation, and page routing.
 
-Run: streamlit run app/main.py
+Run: streamlit run src/app/main.py
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 from uuid import uuid4
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 import streamlit as st
 
@@ -30,7 +30,8 @@ st.set_page_config(
     },
 )
 
-from config.settings import get_settings  # noqa: E402  # must follow set_page_config
+from src.config.settings import get_settings  # noqa: E402  # must follow set_page_config
+from src.core.conversation.state import PHASE_CONFIG  # noqa: E402
 from src.utils.logger import logger  # noqa: E402
 
 settings = get_settings()
@@ -419,13 +420,8 @@ def _render_sidebar() -> None:
 
         # Phase indicator
         phase = st.session_state.phase
-        phase_config = {
-            "rapport": ("rgba(56,135,230,.16)", "#7DB4F5", "Building rapport"),
-            "tutoring": ("rgba(99,102,241,.18)", "#A5B4FC", "Socratic tutoring"),
-            "assessment": ("rgba(244,150,90,.16)", "#F6B07D", "Clinical assessment"),
-            "mastery": ("rgba(52,211,153,.16)", "#6EE7B7", "Mastery summary"),
-        }
-        bg, fg, label = phase_config.get(phase, ("rgba(148,163,184,.16)", "#CBD5E1", phase))
+        _default = (phase, "rgba(148,163,184,.16)", "#CBD5E1")
+        label, bg, fg = PHASE_CONFIG.get(phase, _default)
         st.markdown(
             f"<div style='font-size:11px;font-weight:600;color:#94A3B8;"
             f"letter-spacing:.08em;margin-bottom:6px'>SESSION PHASE</div>"
@@ -449,8 +445,8 @@ def _render_sidebar() -> None:
             if hint_level >= max_hints:
                 st.success("✓ Answer reveal unlocked", icon=None)
             else:
-                max_hints - hint_level
-                st.info(f"Hints used: {hint_level}/{max_hints}", icon=None)
+                remaining = max_hints - hint_level
+                st.info(f"Hints used: {hint_level}/{max_hints} · {remaining} remaining", icon=None)
 
         st.divider()
 
@@ -482,19 +478,19 @@ def _render_sidebar() -> None:
 def _route() -> None:
     page = st.session_state.current_page
     if page == "chat":
-        from app.views import chat
+        from src.app.views import chat
 
         chat.render()
     elif page == "dashboard":
-        from app.views import dashboard
+        from src.app.views import dashboard
 
         dashboard.render()
     elif page == "images":
-        from app.views import image_analysis
+        from src.app.views import image_analysis
 
         image_analysis.render()
     elif page == "settings":
-        from app.views import settings_page
+        from src.app.views import settings_page
 
         settings_page.render()
     else:
